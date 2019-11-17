@@ -1,23 +1,32 @@
 call plug#begin("~/.vim/plugged")
 
   Plug 'vim-scripts/c.vim'
-
+  
+  " Latex support
   Plug 'lervag/vimtex'
   let g:tex_flavor='latex'
   let g:vimtex_view_method='zathura'
   let g:vimtex_quickfix_mode=0
   set conceallevel=1
   let g:tex_conceal='abdmg'
-
   let g:vimtex_compiler_latexmk = {
       \ 'build_dir' : 'output',
   \}
 
+  " Pandoc Markdown support
+  Plug 'vim-pandoc/vim-pandoc'
+  Plug 'vim-pandoc/vim-pandoc-syntax'
+
+  " Snippets
   Plug 'SirVer/ultisnips'
 
   " Language support
   Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-  let g:coc_global_extensions = ['coc-tslint-plugin', 'coc-tsserver', 'coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-yank', 'coc-prettier', 'coc-java' ]
+  let g:coc_global_extensions = ['coc-tslint-plugin', 'coc-tsserver', 'coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-yank', 'coc-prettier', 'coc-java', 'coc-prettier']
+  command! -nargs=0 Prettier :call CocAction("runCommand", "prettier.formatFile")
+
+  " Rust support
+  Plug 'rust-lang/rust.vim'
 
   " Flutter support
   Plug 'dart-lang/dart-vim-plugin'
@@ -29,9 +38,8 @@ call plug#begin("~/.vim/plugged")
   Plug 'leafgarland/typescript-vim'
 
   " Prettier
-  Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
-  let g:prettier#autoformat = 1
-  autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+  " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+  " let g:prettier#autoformat = 1
 
   " Tree File View
   Plug 'scrooloose/nerdtree'
@@ -82,3 +90,10 @@ set tabstop=2 shiftwidth=2 expandtab number relativenumber
 set spelllang=en_gb
 " Automatically enable spell check in the given file types
 autocmd FileType latex,tex,md,markdown setlocal spell
+" Automatically compile markdown files
+"autocmd BufWritePost *.md silent execute "!pandoc % -o %:r.pdf"
+command PandocPDF silent execute "!pandoc % -o %:r.pdf"
+map <F6> :PandocPDF<CR>
+" For opening markdown files in zathura
+command Zathura execute "!zathura %:r.pdf"
+map <F5> :Zathura<CR>

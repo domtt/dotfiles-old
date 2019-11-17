@@ -9,3 +9,5 @@ alias ls=lsd
 alias cat=bat
 
 fish_vi_key_bindings
+
+source $HOME/.cargo/env
